@@ -4,7 +4,7 @@ import MatchResultForm from './components/MatchResultForm';
 import AppsScriptService from './services/googleSheets';
 
 // Updated Apps Script web app URL
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbykykylOeRhdfhgnZ7rK-COdZwz8CD7eYL22UcO4xt3wvbTY8aXzSL1zfd0va9HdIw9Xw/exec';
+const APPS_SCRIPT_URL = 'const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQZd4CbBtJL5HQdL0ihRjUuqfuZEjoFFz-2hgvIxO6-Oei1y3KPuIRGq7RmkvZFVfBQg/exec';
 
 const sheetsService = new AppsScriptService(APPS_SCRIPT_URL);
 
