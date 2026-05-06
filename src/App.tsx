@@ -4,7 +4,11 @@ import MatchResultForm from './components/MatchResultForm';
 import AppsScriptService from './services/googleSheets';
 
 // Updated Apps Script web app URL
+<<<<<<< HEAD
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQZd4CbBtJL5HQdL0ihRjUuqfuZEjoFFz-2hgvIxO6-Oei1y3KPuIRGq7RmkvZFVfBQg/exec';
+=======
+const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxokl9pnqhVld9jMbtUrjxOtyGE7c81zUwHIA5UlWTErsyFViIwei3SrAWNp2Y776hCw/exec';
+>>>>>>> cb53084 (point to pt amsterdam sheet)
 
 const sheetsService = new AppsScriptService(APPS_SCRIPT_URL);
 
@@ -16,47 +20,36 @@ interface MatchResult {
   playerDeck: string;
   opponentDeck: string;
   games: string;
-  playDraw?: string;
   sideboardStatus?: string;
-  date?: string;
+  mainColors?: string;
+  splashColors?: string;
+  wins?: number;
+  losses?: number;
+  draftType?: string;
+  sheetTab?: string;
 }
 
 const App: React.FC = () => {
-  const [results, setResults] = useState<MatchResult[]>([]);
+  const [players, setPlayers] = useState<string[]>([]);
+  const [opponents, setOpponents] = useState<string[]>([]);
+  const [decks, setDecks] = useState<string[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 
-  // Extract unique values for shared dropdowns - with safety checks
-  const uniquePlayers = [...new Set([
-    ...(Array.isArray(results) ? results.map(r => r.player) : []),
-    ...(Array.isArray(results) ? results.map(r => r.opponent) : [])
-  ].filter(Boolean))].sort();
-  
-  const uniqueDecks = [...new Set([
-    ...(Array.isArray(results) ? results.map(r => r.playerDeck) : []),
-    ...(Array.isArray(results) ? results.map(r => r.opponentDeck) : [])
-  ].filter(Boolean))].sort();
-
-  const loadResults = async () => {
+  const loadDropdownData = async () => {
     try {
-      console.log('Loading results from Google Sheets...');
+      console.log('Loading dropdown data from Google Sheets...');
       const data: any = await sheetsService.getData();
-      console.log('Raw data from sheets:', data);
-      console.log('Type of data:', typeof data);
-      console.log('Is array?', Array.isArray(data));
       
-      // Ensure we always set an array
-      if (Array.isArray(data)) {
-        setResults(data);
-      } else if (data && data.data && Array.isArray(data.data)) {
-        setResults(data.data);
-      } else {
-        console.warn('Data is not in expected format, setting empty array');
-        setResults([]);
+      if (data.success) {
+        setPlayers(data.players || []);
+        setOpponents(data.opponents || []);
+        setDecks(data.decks || []);
+        console.log('Loaded players:', data.players);
+        console.log('Loaded opponents:', data.opponents);
+        console.log('Loaded decks:', data.decks);
       }
     } catch (error) {
-      console.error('Error loading results:', error);
-      setResults([]); // Ensure we set an empty array on error
-      toast.error('Failed to load results');
+      console.error('Error loading dropdown data:', error);
     }
   };
 
@@ -71,7 +64,6 @@ const App: React.FC = () => {
       
       if (success) {
         toast.success('Match result saved successfully!');
-        await loadResults(); // Reload results
       } else {
         toast.error('Failed to save match result - check console for details');
       }
@@ -84,13 +76,12 @@ const App: React.FC = () => {
   };
 
   useEffect(() => {
-    loadResults();
+    loadDropdownData();
   }, []);
 
-  // Debug info - you can remove this later
-  console.log('Unique players:', uniquePlayers);
-  console.log('Unique decks:', uniqueDecks);
-  console.log('Total results:', results.length);
+  console.log('Players:', players);
+  console.log('Opponents:', opponents);
+  console.log('Decks:', decks);
 
   return (
     <div className="min-h-screen" style={{backgroundColor: '#1a202c'}}>
@@ -120,8 +111,9 @@ const App: React.FC = () => {
           <MatchResultForm 
             onSubmit={handleSubmitResult} 
             isLoading={isLoading}
-            players={uniquePlayers}
-            decks={uniqueDecks}
+            players={players}
+            opponents={opponents}
+            decks={decks}
           />
         </div>
       </div>
