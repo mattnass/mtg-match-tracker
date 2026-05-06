@@ -4,11 +4,7 @@ import MatchResultForm from './components/MatchResultForm';
 import AppsScriptService from './services/googleSheets';
 
 // Updated Apps Script web app URL
-<<<<<<< HEAD
 const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzQZd4CbBtJL5HQdL0ihRjUuqfuZEjoFFz-2hgvIxO6-Oei1y3KPuIRGq7RmkvZFVfBQg/exec';
-=======
-const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxxokl9pnqhVld9jMbtUrjxOtyGE7c81zUwHIA5UlWTErsyFViIwei3SrAWNp2Y776hCw/exec';
->>>>>>> cb53084 (point to pt amsterdam sheet)
 
 const sheetsService = new AppsScriptService(APPS_SCRIPT_URL);
 
